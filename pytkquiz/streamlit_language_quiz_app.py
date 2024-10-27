@@ -8,7 +8,7 @@ from PIL import Image
 from streamlit.components.v1 import html
 from streamlit_card import card
 
-from pytkquiz.feedback import show_feedback_ui
+from feedback import show_feedback_ui
 from sound_gen import generate_sound_if_not_found
 from quiz_logic import QuizLogic, WordData
 

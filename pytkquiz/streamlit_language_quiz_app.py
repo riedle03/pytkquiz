@@ -1,14 +1,23 @@
+import logging
 import os
 import streamlit as st
 from PIL import Image
-import gtts
-import base64
+# import gtts
+# import base64
 
 from streamlit.components.v1 import html
 from streamlit_card import card
 
+from pytkquiz.feedback import show_feedback_ui
 from sound_gen import generate_sound_if_not_found
 from quiz_logic import QuizLogic, WordData
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
 
 
 class StreamlitLanguageQuizApp:
@@ -18,7 +27,6 @@ class StreamlitLanguageQuizApp:
         self.root_dir = os.path.abspath(os.path.join(__file__, "..", ".."))
         self.quiz_logic = QuizLogic(root_dir=self.root_dir)
         self.language = 'en'
-        #words_path = os.path.join(self.root_dir, "words.csv")
 
         self.update_language(load_next=False)
 
@@ -77,7 +85,7 @@ class StreamlitLanguageQuizApp:
         with c2:
             st.metric("Attempts", st.session_state.attempts)
 
-        res = card(
+        _ = card(
             title=st.session_state.current_question.word,
             text="",
             styles={
@@ -127,6 +135,7 @@ class StreamlitLanguageQuizApp:
 
     def run(self):
         st.title("Sight Words Quiz")
+        show_feedback_ui()
         self.show_word()
 
     def check_answer(self, selected_option: WordData):
@@ -175,13 +184,6 @@ class StreamlitLanguageQuizApp:
                 st.write('<span class="hide-the-container"/>', unsafe_allow_html=True)
 
         return audio_elem
-
-    # @staticmethod
-    # def generate_sound_if_not_found(text, sound_path: str):
-    #     # TODO: update for lang
-    #     if not os.path.exists(sound_path):
-    #         tts = gtts.gTTS(text)
-    #         tts.save(sound_path)
 
 
 if __name__ == "__main__":
